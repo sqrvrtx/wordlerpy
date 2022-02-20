@@ -20,9 +20,7 @@ def main(fixed, variable):
 
 
 def create_regex_str(fixed, variable):
-
     if fixed:
-
         fixed = fixed.lower().replace("*", ".")
         len_fixed_chars = len(fixed) - fixed.count("*")
     else:
