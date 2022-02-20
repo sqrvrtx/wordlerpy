@@ -7,7 +7,7 @@ def get_5_letter_words():
     with open(f_str, 'r') as f:
         dict_words = f.read().splitlines()
     dict_words_5 = [x.lower() for x in dict_words if len(x) == 5]
-    print(len(dict_words_5))
+
     return dict_words_5
 
 def main(fixed, variable):    
@@ -20,47 +20,30 @@ def create_regex_str(fixed, variable):
 
     # '*A*IT'
     if fixed:
-        for indx, val in enumerate(fixed):
-            print(indx, val)
 
         fixed = fixed.lower().replace('*', '.')
         len_fixed_chars = len(fixed) - fixed.count('*')
     else:
         len_fixed_chars = 5  # no fixed chars
 
-    if variable:
+    return fixed
 
-        product_vals = list(set(list(it.product(variable.lower() + '.', repeat=len_fixed_chars))))
-        print(product_vals)
-
-        ls_vals = [''.join(x) for x in product_vals]
-        print(ls_vals)
-
-    ls_vals.append(fixed)
-    print(ls_vals)
-
-
-
-
-
-
-
-    ls = [x for x in list(set(list(it.combinations_with_replacement('CAT.', 5)))) if  all((c in chars) for c in ''.join(x))]
-    return ls_vals
-
-def basic(dict_words_5, fixed, variable):
+def basic(potentials, fixed, variable):
     # Test *A*IT->Tacit
-    regex_str_ls = create_regex_str(fixed, variable)
-    #fudge
-    # regex_str = r'''.a.it'''
-    potentials = []
-    for regex_str in regex_str_ls:
-        potentials.extend([x for x in dict_words_5 if re.match(regex_str, x)])
+    print(f'Fixed {fixed}, Variable {variable}')
+    if fixed:
+        regex_str = create_regex_str(fixed, variable)
+        potentials = [x for x in potentials if re.match(regex_str, x)]
+
+    if variable:
+        potentials = [x for x in potentials if all(y in x for y in list(variable.lower()))]
+
     return potentials
 
 def print_potentials(potentials):
     for word in potentials:
         print(word)
+    print('Length of potentials: ', len(potentials))
 
 @click.command()
 @click.option("--fixed", "-f",
