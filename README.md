@@ -19,4 +19,8 @@ or if you had 'A', 'I' and 'T' but you are unsure of the order:
 
     python wordler.py -v 'AIT'
 
+or you can mix:
+
+    python wordler.py -f '*A*IT' -v 'CATI'
+
 
