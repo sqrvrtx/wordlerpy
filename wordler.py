@@ -1,6 +1,8 @@
 import re
 import itertools as it
+
 import click
+
 
 f_str = "/usr/share/dict/words"
 
@@ -13,27 +15,9 @@ def get_5_letter_words():
     return dict_words_5
 
 
-def main(fixed, variable):
-    dict_words_5 = get_5_letter_words()
-    potentials = basic(dict_words_5, fixed, variable)
-    print_potentials(potentials)
-
-
-def create_regex_str(fixed, variable):
+def get_potential_words(potentials, fixed, variable, used):
     if fixed:
-        fixed = fixed.lower().replace("*", ".")
-        len_fixed_chars = len(fixed) - fixed.count("*")
-    else:
-        len_fixed_chars = 5  # no fixed chars
-
-    return fixed
-
-
-def basic(potentials, fixed, variable):
-    # Test *A*IT->Tacit
-    print(f"Fixed {fixed}, Variable {variable}")
-    if fixed:
-        regex_str = create_regex_str(fixed, variable)
+        regex_str = fixed.lower().replace("*", ".")
         potentials = [x for x in potentials if re.match(regex_str, x)]
 
     if variable:
@@ -41,22 +25,36 @@ def basic(potentials, fixed, variable):
             x for x in potentials if all(y in x for y in list(variable.lower()))
         ]
 
+    if used:
+        potentials = [
+            x for x in potentials if not any(y in x for y in list(used.lower()))
+        ]
+
+
     return potentials
 
 
 def print_potentials(potentials):
     for word in potentials:
         print(word)
-    print("Length of potentials: ", len(potentials))
+    print("\n\nLength of potentials: ", len(potentials))
+
+
+def main(fixed, variable, used):
+    print(f"Fixed {fixed}, Variable {variable} \n\n")
+    dict_words_5 = get_5_letter_words()
+    potentials = get_potential_words(dict_words_5, fixed, variable, used)
+    print_potentials(potentials)
 
 
 @click.command()
 @click.option("--fixed", "-f", help="Text used to separate numbers (default: \\n)")
 @click.version_option(version="1.0.0")
 @click.option("--variable", "-v", help="Text used to separate numbers (default: \\n)")
-def seq(variable, fixed):
-    main(fixed, variable)
+@click.option("--used", "-u", help="Text used to separate numbers (default: \\n)")
+def cmd_entry(used, variable, fixed):
+    main(fixed, variable, used)
 
 
 if __name__ == "__main__":
-    fixed, variable = seq()
+    cmd_entry()
