@@ -1,5 +1,4 @@
 import re
-import itertools as it
 
 import click
 
@@ -26,6 +25,21 @@ def get_potential_words(potentials, fixed, variable, used):
         ]
 
     if used:
+
+        # remove letters already defined under -v and  -f
+        used = used.lower()
+        intersect_set1 = set(list(used.lower())) & set(list(fixed.lower()))
+        intersect_set2 = set(list(used.lower())) & set(list(variable.lower()))
+        intersect_set = intersect_set2 | intersect_set1
+        used_ls = list(used)
+        print(intersect_set, used_ls)
+        if intersect_set:
+            for x in intersect_set:
+                used_ls.remove(x)
+            print(used_ls)
+            used = ''.join(used_ls)
+
+
         potentials = [
             x for x in potentials if not any(y in x for y in list(used.lower()))
         ]
