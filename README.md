@@ -23,4 +23,10 @@ or you can mix:
 
     python wordler.py -f '*A*IT' -v 'CATI'
 
+You can also add letters you have already tried and have had no direct matches:
+
+    python wordler.py -f '*A*IT' -v 'CATI' -u 'XYZ'
+
+
+
 

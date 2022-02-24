@@ -28,9 +28,14 @@ def get_potential_words(potentials, fixed, variable, used):
 
         # remove letters already defined under -v and  -f
         used = used.lower()
+
         intersect_set1 = set(list(used.lower())) & set(list(fixed.lower()))
-        intersect_set2 = set(list(used.lower())) & set(list(variable.lower()))
-        intersect_set = intersect_set2 | intersect_set1
+        if variable:
+            intersect_set2 = set(list(used.lower())) & set(list(variable.lower()))
+            intersect_set = intersect_set2 | intersect_set1
+        else:
+            intersect_set = intersect_set1
+            
         used_ls = list(used)
         print(intersect_set, used_ls)
         if intersect_set:
